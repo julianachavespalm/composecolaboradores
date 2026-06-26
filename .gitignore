@@ -1,31 +1,40 @@
-gitignore
-*.iml
-.gradle
-/local.properties
-/.idea/
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+# Gradle
+.gradle/
+build/
+/*/build/
 
-# Logs e arquivos de erro
+# IntelliJ/Android Studio
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/libraries/
+.idea/dictionaries/
+.idea/caches/
+.idea/assetWizardSettings.xml
+
+# Local configuration
+local.properties
+
+# Keystores e Segredos (MUITO IMPORTANTE)
+*.jks
+*.keystore
+*.p12
+google-services.json
+
+# Logs e arquivos temporários
 *.log
 *.hprof
 *.bak
 *.swp
-/captures/
+captures/
+
+# Testes e Lint
 /lint-results/
 /test-results/
 
-# Arquivos temporários do Android Studio / IntelliJ
-.idea/shelf/
-.idea/caches/
-.idea/libraries/
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/navEditor.xml
-.idea/assetWizardSettings.xml
-
-# Backup do sistema
+# OS específicos
+.DS_Store
 Thumbs.db

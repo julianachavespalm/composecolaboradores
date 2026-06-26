@@ -15,3 +15,7 @@ class SalvarColaboradorUseCase(private val repository: ColaboradorRepository) {
 class RemoverColaboradorUseCase(private val repository: ColaboradorRepository) {
     operator fun invoke(id: Int) = repository.remover(id)
 }
+
+class ValidarEmailUseCase(private val repository: ColaboradorRepository) {
+    operator fun invoke(email: String): Boolean = repository.isEmailValido(email)
+}

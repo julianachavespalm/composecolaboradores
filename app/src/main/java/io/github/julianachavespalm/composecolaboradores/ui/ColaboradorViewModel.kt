@@ -10,13 +10,15 @@ import io.github.julianachavespalm.composecolaboradores.domain.model.Nivel
 import io.github.julianachavespalm.composecolaboradores.domain.usecase.GetColaboradoresUseCase
 import io.github.julianachavespalm.composecolaboradores.domain.usecase.RemoverColaboradorUseCase
 import io.github.julianachavespalm.composecolaboradores.domain.usecase.SalvarColaboradorUseCase
+import io.github.julianachavespalm.composecolaboradores.domain.usecase.ValidarEmailUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 
 class ColaboradorViewModel(
     private val getColaboradoresUseCase: GetColaboradoresUseCase,
     private val salvarColaboradorUseCase: SalvarColaboradorUseCase,
-    private val removerColaboradorUseCase: RemoverColaboradorUseCase
+    private val removerColaboradorUseCase: RemoverColaboradorUseCase,
+    private val validarEmailUseCase: ValidarEmailUseCase
 ) : ViewModel() {
 
     val colaboradores = getColaboradoresUseCase()
@@ -24,15 +26,21 @@ class ColaboradorViewModel(
 
     var nome by mutableStateOf("")
     var email by mutableStateOf("")
-    var nivelSelecionado by mutableStateOf(Nivel.ADMINISTRATIVO)
+    var nivelSelecionado by mutableStateOf(Nivel.NENHUM)
     var colaboradorEmEdicao by mutableStateOf<Colaborador?>(null)
+
+    val isEmailValido: Boolean
+        get() = validarEmailUseCase(email)
+
+    val podeSalvar: Boolean
+        get() = nome.isNotBlank() && isEmailValido && nivelSelecionado != Nivel.NENHUM
 
     fun onNomeChange(novoNome: String) { nome = novoNome }
     fun onEmailChange(novoEmail: String) { email = novoEmail }
     fun onNivelChange(novoNivel: Nivel) { nivelSelecionado = novoNivel }
 
     fun salvar() {
-        if (nome.isNotBlank() && email.isNotBlank()) {
+        if (podeSalvar) {
             val colaborador = Colaborador(
                 id = colaboradorEmEdicao?.id ?: 0,
                 nome = nome,
@@ -61,7 +69,7 @@ class ColaboradorViewModel(
     fun limparCampos() {
         nome = ""
         email = ""
-        nivelSelecionado = Nivel.ADMINISTRATIVO
+        nivelSelecionado = Nivel.NENHUM
         colaboradorEmEdicao = null
     }
 }

@@ -102,6 +102,38 @@ class ColaboradorRepositoryTest {
         assertEquals(estadoInicial, repository.colaboradores.value)
     }
 
+    @Test
+    fun `nao deve salvar colaborador sem nome`() {
+        val colaborador = criarColaborador("", "email@email.com", Nivel.ADMINISTRATIVO)
+        repository.salvar(colaborador)
+        val resultado = repository.colaboradores.value
+        assertTrue(resultado.isEmpty())
+    }
+
+    @Test
+    fun `nao deve salvar colaborador com nivel NENHUM`() {
+        val colaborador = criarColaborador("Ralf", "ralf@email.com", Nivel.NENHUM)
+        repository.salvar(colaborador)
+        val resultado = repository.colaboradores.value
+        assertTrue(resultado.isEmpty())
+    }
+
+    @Test
+    fun `nao deve salvar colaborador sem email`() {
+        val colaborador = criarColaborador("Ralf", "", Nivel.ADMINISTRATIVO)
+        repository.salvar(colaborador)
+        val resultado = repository.colaboradores.value
+        assertTrue(resultado.isEmpty())
+    }
+
+    @Test
+    fun `nao deve salvar cadastro com todos dados em branco`() {
+        val colaborador = criarColaborador("", "", Nivel.NENHUM)
+        repository.salvar(colaborador)
+        val resultado = repository.colaboradores.value
+        assertTrue(resultado.isEmpty())
+    }
+
     private fun cadastrarColaborador(): Colaborador {
         repository.salvar(
             criarColaborador(
