@@ -49,17 +49,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle
-
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-
       - name: Run Instrumented Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -68,4 +65,10 @@ jobs:
           arch: x86_64
           profile: pixel_6
           emulator-options: "-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-metrics -delay-adb"
-          script: ./gradlew connectedCheck
+          script: |
+            adb kill-server
+            adb start-server
+            adb wait-for-device
+            adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
+            adb shell input keyevent 82
+            ./gradlew connectedCheck
