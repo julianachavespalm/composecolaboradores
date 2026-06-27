@@ -1,6 +1,6 @@
 package io.github.julianachavespalm.composecolaboradores
 
-import io.github.julianachavespalm.composecolaboradores.data.repository.ColaboradorRepository
+import io.github.julianachavespalm.composecolaboradores.data.repository.InMemoryColaboradorRepository
 import io.github.julianachavespalm.composecolaboradores.domain.model.Nivel
 import io.github.julianachavespalm.composecolaboradores.logic.ColaboradorRepositoryLogic
 import io.github.julianachavespalm.composecolaboradores.logic.ColaboradorRepositoryLogic.Companion.Massa
@@ -12,7 +12,7 @@ import org.junit.Test
 
 class ColaboradorRepositoryTest {
 
-    private val repository = ColaboradorRepository()
+    private val repository = InMemoryColaboradorRepository()
     private val logic = ColaboradorRepositoryLogic(repository)
 
     @Test
