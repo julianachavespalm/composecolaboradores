@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -190,7 +191,7 @@ fun ColaboradorForm(
                 readOnly = true,
                 label = { Text(stringResource(R.string.label_nivel)) },
                 placeholder = { Text(stringResource(R.string.placeholder_nivel)) },
-                leadingIcon = { Icon(Icons.Default.List, contentDescription = null) },
+                leadingIcon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null) },
                 trailingIcon = {
                     IconButton(onClick = { menuExpandido = !menuExpandido }) {
                         Icon(Icons.Default.ArrowDropDown, contentDescription = null)
@@ -332,7 +333,7 @@ fun ColaboradorCard(
                     SuggestionChip(
                         onClick = { },
                         label = { Text(colaborador.nivel.descricao) },
-                        icon = { Icon(Icons.Default.List, contentDescription = null, modifier = Modifier.size(16.dp)) },
+                        icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null, modifier = Modifier.size(16.dp)) },
                         border = null,
                         colors = SuggestionChipDefaults.suggestionChipColors(
                             containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)
