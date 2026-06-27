@@ -35,6 +35,9 @@ class ColaboradorViewModel(
     val podeSalvar: Boolean
         get() = nome.isNotBlank() && isEmailValido && nivelSelecionado != Nivel.NENHUM
 
+    val estaEditandoOuPreenchido: Boolean
+        get() = nome.isNotEmpty() || email.isNotEmpty() || nivelSelecionado != Nivel.NENHUM || colaboradorEmEdicao != null
+
     fun onNomeChange(novoNome: String) { nome = novoNome }
     fun onEmailChange(novoEmail: String) { email = novoEmail }
     fun onNivelChange(novoNivel: Nivel) { nivelSelecionado = novoNivel }

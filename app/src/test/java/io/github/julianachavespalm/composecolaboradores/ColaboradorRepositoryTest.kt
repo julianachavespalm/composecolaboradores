@@ -134,6 +134,35 @@ class ColaboradorRepositoryTest {
         assertTrue(resultado.isEmpty())
     }
 
+    @Test
+    fun `nao deve salvar colaborador com email contendo espaco`() {
+        val colaborador = criarColaborador("Ralf", "ralf @email.com", Nivel.ADMINISTRATIVO)
+        repository.salvar(colaborador)
+        val resultado = repository.colaboradores.value
+        assertTrue(resultado.isEmpty())
+    }
+
+    @Test
+    fun `nao deve salvar colaborador com email invalido sem ponto`() {
+        val colaborador = criarColaborador("Ralf", "ralf@email", Nivel.ADMINISTRATIVO)
+        repository.salvar(colaborador)
+        assertTrue(repository.colaboradores.value.isEmpty())
+    }
+
+    @Test
+    fun `nao deve salvar colaborador com email invalido sem arroba`() {
+        val colaborador = criarColaborador("Ralf", "ralf.email.com", Nivel.ADMINISTRATIVO)
+        repository.salvar(colaborador)
+        assertTrue(repository.colaboradores.value.isEmpty())
+    }
+
+    @Test
+    fun `nao deve salvar colaborador com email invalido caracteres proibidos`() {
+        val colaborador = criarColaborador("Ralf", "ralf!#$@email.com", Nivel.ADMINISTRATIVO)
+        repository.salvar(colaborador)
+        assertTrue(repository.colaboradores.value.isEmpty())
+    }
+
     private fun cadastrarColaborador(): Colaborador {
         repository.salvar(
             criarColaborador(

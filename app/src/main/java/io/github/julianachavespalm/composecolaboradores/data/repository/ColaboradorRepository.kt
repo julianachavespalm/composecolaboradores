@@ -13,7 +13,6 @@ class ColaboradorRepository {
     private var proximoId = 1
 
     fun salvar(colaborador: Colaborador) {
-        // Validação na camada de serviço (SRV)
         if (colaborador.nome.isBlank() || 
             !isEmailValido(colaborador.email) || 
             colaborador.nivel == Nivel.NENHUM) {
@@ -33,19 +32,8 @@ class ColaboradorRepository {
     }
 
     fun isEmailValido(email: String): Boolean {
-        if (email.count { it == '@' } != 1) return false
-        
-        val antesDoAt = email.substringBefore("@")
-        val depoisDoAt = email.substringAfter("@")
-        
-        if (antesDoAt.isEmpty()) return false
-        
-        if (!depoisDoAt.contains(".")) return false
-        
-        val dominio = depoisDoAt.substringBefore(".")
-        val extensao = depoisDoAt.substringAfterLast(".")
-
-        return dominio.length >= 2 && extensao.length >= 2
+        val emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$".toRegex()
+        return email.matches(emailRegex)
     }
 
     fun remover(id: Int) {
