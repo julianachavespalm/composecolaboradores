@@ -13,8 +13,8 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
 
     private val fieldNome = hasTestTag("campo_nome")
     private val fieldEmail = hasTestTag("campo_email")
-    private val btnSalvar = hasTestTag("botao_salvar")
     private val btnCancelar = hasTestTag("botao_cancelar")
+    private val btnSalvar = hasTestTag("botao_salvar")
     private val btnExcluirForm = hasText(res(R.string.acao_excluir))
     private val tagListaColaboradores = "lista_colaboradores"
 
@@ -61,9 +61,21 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
             .performClick()
     }
 
-    fun confirmarExclusao() = apply { node(btnExcluirForm and hasAnyAncestor(isDialog())).performClick() }
-    fun clicarCancelar() = apply { node(btnCancelar and !hasAnyAncestor(isDialog())).performClick() }
-    fun cancelarExclusao() = apply { node(btnCancelar and hasAnyAncestor(isDialog())).performClick() }
+    fun confirmarExclusao() = apply { 
+        composeTestRule.waitUntil(3000) {
+            composeTestRule.onAllNodes(isDialog()).fetchSemanticsNodes().isNotEmpty()
+        }
+        node(btnExcluirForm and hasAnyAncestor(isDialog())).performClick() 
+    }
+    fun clicarCancelar() = apply { 
+        scrollPara(btnCancelar and !hasAnyAncestor(isDialog()))
+        node(btnCancelar and !hasAnyAncestor(isDialog())).performClick()
+        composeTestRule.waitForIdle()
+    }
+    fun cancelarExclusao() = apply { 
+        node(btnCancelar and hasAnyAncestor(isDialog())).performClick() 
+        composeTestRule.waitForIdle()
+    }
 
     fun verificar(block: Assercoes.() -> Unit) = Assercoes().apply(block)
 
@@ -96,8 +108,10 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
             node(btnCancelar and !hasAnyAncestor(isDialog())).assertIsDisplayed() 
         }
         fun formularioVazio() {
-            node(fieldNome).assertTextContains("")
-            node(fieldEmail).assertTextContains("")
+            node(fieldNome).assertTextContains(res(R.string.label_nome))
+            node(fieldEmail).assertTextContains(res(R.string.label_email))
+            // O campo nível mostra o Label ("Nível") quando está vazio, não o placeholder
+            node(hasTestTag("campo_nivel")).assertTextContains(res(R.string.label_nivel))
         }
         fun dialogoExclusaoSumiu() = node(res(R.string.confirmacao_excluir_titulo)).assertDoesNotExist()
     }

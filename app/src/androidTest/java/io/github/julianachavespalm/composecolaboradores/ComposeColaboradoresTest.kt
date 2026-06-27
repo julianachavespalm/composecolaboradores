@@ -1,16 +1,10 @@
 package io.github.julianachavespalm.composecolaboradores
 
-import androidx.compose.ui.test.junit4.createComposeRule
-import io.github.julianachavespalm.composecolaboradores.data.repository.ColaboradorRepository
-import io.github.julianachavespalm.composecolaboradores.domain.usecase.GetColaboradoresUseCase
-import io.github.julianachavespalm.composecolaboradores.domain.usecase.RemoverColaboradorUseCase
-import io.github.julianachavespalm.composecolaboradores.domain.usecase.SalvarColaboradorUseCase
-import io.github.julianachavespalm.composecolaboradores.domain.usecase.ValidarEmailUseCase
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
 import io.github.julianachavespalm.composecolaboradores.page.ComposeColaboradoresPage.Companion.Massa
 import io.github.julianachavespalm.composecolaboradores.page.ComposeColaboradoresPage.Companion.onGerenciadorScreen
-import io.github.julianachavespalm.composecolaboradores.ui.ColaboradorViewModel
-import io.github.julianachavespalm.composecolaboradores.ui.GerenciadorColaboradoresScreen
-import io.github.julianachavespalm.composecolaboradores.ui.theme.ComposeColaboradoresTheme
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -18,25 +12,15 @@ import org.junit.Test
 class ComposeColaboradoresTest {
 
     @get:Rule
-    val composeTestRule = createComposeRule()
-
-    private val repository = ColaboradorRepository()
-    private val viewModel = ColaboradorViewModel(
-        GetColaboradoresUseCase(repository),
-        SalvarColaboradorUseCase(repository),
-        RemoverColaboradorUseCase(repository),
-        ValidarEmailUseCase(repository)
-    )
+    val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     @Before
-    fun setup() {
-        composeTestRule.setContent {
-            ComposeColaboradoresTheme {
-                GerenciadorColaboradoresScreen(viewModel)
-            }
-        }
+    fun unlockDevice() {
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        device.wakeUp()
+        device.executeShellCommand("wm dismiss-keyguard")
     }
-    
+
     @Test
     fun deveSalvarCadastroValidoNaLista() {
         onGerenciadorScreen(composeTestRule) {
@@ -162,7 +146,6 @@ class ComposeColaboradoresTest {
             preencherFormulario(Massa.valida)
             clicarCancelar()
             
-            clicarAbrirCadastro()
             verificar { 
                 formularioVazio() 
             }
