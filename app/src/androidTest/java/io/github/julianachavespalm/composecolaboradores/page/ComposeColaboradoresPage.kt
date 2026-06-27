@@ -86,7 +86,7 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
 
         object Massa {
             val valida = Usuario("Colaborador", "colaborador@email.com", Nivel.GERENCIA)
-            val validaParcialmenteDiferente = Usuario("Colaborador", "colaborador@email.com", Nivel.GERENCIA)
+            val validaParcialmenteDiferente = Usuario("Outro Colaborador", "colaborador@email.com", Nivel.GERENCIA)
             val comEspaco = Usuario("Erro", "user @email.com", Nivel.FINANCEIRO)
             val invalida = Usuario("Invalido", "email-sem-formato", Nivel.SUPORTE)
             val lista = listOf(
