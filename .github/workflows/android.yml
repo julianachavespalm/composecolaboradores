@@ -47,7 +47,6 @@ jobs:
   android-test:
     name: Android Instrumented Tests
     runs-on: ubuntu-latest
-    if: github.event_name != 'workflow_dispatch' || github.event.inputs.run-android == 'true'
     steps:
       - uses: actions/checkout@v4
 
@@ -64,9 +63,9 @@ jobs:
       - name: Run Instrumented Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
+          api-level: 30
           target: default
           arch: x86_64
           profile: pixel_6
-          emulator-options: "-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-metrics"
+          emulator-options: "-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-metrics -delay-adb"
           script: ./gradlew connectedCheck
