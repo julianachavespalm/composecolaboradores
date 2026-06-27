@@ -67,14 +67,13 @@ jobs:
       - name: Run Instrumented Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 24
-          target: default
+          api-level: 29
+          target: google_apis
           arch: x86_64
-          profile: pixel_6
           disable-animations: true
           emulator-options: "-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-metrics -no-snapshot-save"
           script: |
-            # Desbloqueia a tela (a Action já aguarda o boot completo)
+            # Desbloqueia a tela
             adb shell input keyevent 82
             
             # Executa os testes instrumentados
