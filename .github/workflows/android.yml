@@ -78,4 +78,3 @@ jobs:
             
             # Executa os testes instrumentados
             ./gradlew connectedDebugAndroidTest --max-workers=2
- 
