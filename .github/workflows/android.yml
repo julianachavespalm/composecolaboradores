@@ -75,7 +75,7 @@ jobs:
           emulator-options: "-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-metrics -delay-adb -no-snapshot-save"
           script: |
             adb kill-server
-            adb start-server
+            adb start-server         
             adb wait-for-device
             adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
             adb shell input keyevent 82
