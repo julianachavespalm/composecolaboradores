@@ -5,20 +5,21 @@ import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.test.platform.app.InstrumentationRegistry
 import io.github.julianachavespalm.composecolaboradores.R
 import io.github.julianachavespalm.composecolaboradores.domain.model.Nivel
+import io.github.julianachavespalm.composecolaboradores.ui.TestTags
 
 class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRule) {
 
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
     private fun res(id: Int) = context.getString(id)
 
-    private val fieldNome = hasTestTag("campo_nome")
-    private val fieldEmail = hasTestTag("campo_email")
-    private val btnCancelar = hasTestTag("botao_cancelar")
-    private val btnSalvar = hasTestTag("botao_salvar")
+    private val fieldNome = hasTestTag(TestTags.CAMPO_NOME)
+    private val fieldEmail = hasTestTag(TestTags.CAMPO_EMAIL)
+    private val btnCancelar = hasTestTag(TestTags.BOTAO_CANCELAR)
+    private val btnSalvar = hasTestTag(TestTags.BOTAO_SALVAR)
     private val btnExcluirForm = hasText(res(R.string.acao_excluir))
-    private val tagListaColaboradores = "lista_colaboradores"
+    private val tagListaColaboradores = TestTags.LISTA_COLABORADORES
 
-    private val tagCardColaborador = "card_colaborador"
+    private val tagCardColaborador = TestTags.CARD_COLABORADOR
 
     private fun node(matcher: SemanticsMatcher) = composeTestRule.onNode(matcher)
     private fun node(text: String) = composeTestRule.onNodeWithText(text)
@@ -30,11 +31,14 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
         node(fieldNome).performTextReplacement(u.nome)
         node(fieldEmail).performTextReplacement(u.email)
         node(fieldEmail).performImeAction()
+        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("menu_item_${u.nivel.name}").performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun clicarSalvar() = apply {
         node(btnSalvar).performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun clicarAbrirCadastro() = apply {
@@ -95,7 +99,9 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
             node(matcher).assertIsDisplayed()
         }
         fun colaboradorApareceApenasUmaVez(u: Usuario) {
-            composeTestRule.onAllNodes(matcherCardColaborador(u) and !hasAnyAncestor(isDialog()))
+            val matcher = matcherCardColaborador(u)
+            scrollPara(matcher)
+            composeTestRule.onAllNodes(matcher and !hasAnyAncestor(isDialog()))
                 .assertCountEquals(1)
         }
         fun colaboradorNaoEstaNaLista(u: Usuario) = node(matcherCardColaborador(u)).assertDoesNotExist()
@@ -110,8 +116,7 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
         fun formularioVazio() {
             node(fieldNome).assertTextContains(res(R.string.label_nome))
             node(fieldEmail).assertTextContains(res(R.string.label_email))
-            // O campo nível mostra o Label ("Nível") quando está vazio, não o placeholder
-            node(hasTestTag("campo_nivel")).assertTextContains(res(R.string.label_nivel))
+            node(hasTestTag(TestTags.CAMPO_NIVEL)).assertTextContains(res(R.string.label_nivel))
         }
         fun dialogoExclusaoSumiu() = node(res(R.string.confirmacao_excluir_titulo)).assertDoesNotExist()
     }
