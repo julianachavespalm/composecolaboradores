@@ -2,13 +2,12 @@ package io.github.julianachavespalm.composecolaboradores
 
 import androidx.compose.ui.test.junit4.createComposeRule
 import io.github.julianachavespalm.composecolaboradores.data.repository.ColaboradorRepository
-import io.github.julianachavespalm.composecolaboradores.domain.model.Nivel
 import io.github.julianachavespalm.composecolaboradores.domain.usecase.GetColaboradoresUseCase
 import io.github.julianachavespalm.composecolaboradores.domain.usecase.RemoverColaboradorUseCase
 import io.github.julianachavespalm.composecolaboradores.domain.usecase.SalvarColaboradorUseCase
 import io.github.julianachavespalm.composecolaboradores.domain.usecase.ValidarEmailUseCase
-import io.github.julianachavespalm.composecolaboradores.page.ComposeColaboradoresPage.Companion.onGerenciadorScreen
 import io.github.julianachavespalm.composecolaboradores.page.ComposeColaboradoresPage.Companion.Massa
+import io.github.julianachavespalm.composecolaboradores.page.ComposeColaboradoresPage.Companion.onGerenciadorScreen
 import io.github.julianachavespalm.composecolaboradores.ui.ColaboradorViewModel
 import io.github.julianachavespalm.composecolaboradores.ui.GerenciadorColaboradoresScreen
 import io.github.julianachavespalm.composecolaboradores.ui.theme.ComposeColaboradoresTheme
@@ -43,7 +42,7 @@ class ComposeColaboradoresTest {
         onGerenciadorScreen(composeTestRule) {
             cadastrar(Massa.valida)
             
-            verificar { colaboradorNaLista(Massa.valida.nome) }
+            verificar { colaboradorNaLista(Massa.valida) }
         }
     }
     
@@ -58,7 +57,7 @@ class ComposeColaboradoresTest {
             verificar {
                 erroColaboradorJaCadastrado()
                 botaoSalvarDesabilitado()
-                colaboradorApareceApenasUmaVez(Massa.valida.nome)
+                colaboradorApareceApenasUmaVez(Massa.valida)
             }
         }
     }
@@ -70,8 +69,8 @@ class ComposeColaboradoresTest {
             cadastrar(Massa.validaParcialmenteDiferente)
 
             verificar {
-                colaboradorApareceApenasUmaVez(Massa.valida.nome)
-                colaboradorApareceApenasUmaVez(Massa.validaParcialmenteDiferente.nome)
+                colaboradorApareceApenasUmaVez(Massa.valida)
+                colaboradorApareceApenasUmaVez(Massa.validaParcialmenteDiferente)
             }
         }
     }
@@ -115,7 +114,7 @@ class ComposeColaboradoresTest {
             }
 
             verificar {
-                Massa.lista.forEach { colaboradorNaLista(it.nome) }
+                Massa.lista.forEach { colaboradorNaLista(it) }
             }
         }
     }
@@ -125,15 +124,17 @@ class ComposeColaboradoresTest {
         val usuarioOriginal = Massa.valida
         val nomeEditado = "Usuario Atualizado"
 
+        val usuarioEditado = usuarioOriginal.copy(nome = nomeEditado)
+
         onGerenciadorScreen(composeTestRule) {
             cadastrar(usuarioOriginal)
             
-            clicarEditarColaborador(usuarioOriginal.nome)
-            preencherFormulario(usuarioOriginal.copy(nome = nomeEditado))
+            clicarEditarColaborador(usuarioOriginal)
+            preencherFormulario(usuarioEditado)
             clicarSalvar()
 
             verificar { 
-                colaboradorNaLista(nomeEditado) 
+                colaboradorNaLista(usuarioEditado) 
             }
         }
     }
@@ -145,11 +146,11 @@ class ComposeColaboradoresTest {
         onGerenciadorScreen(composeTestRule) {
             cadastrar(usuarioParaExcluir)
             
-            clicarExcluirColaborador(usuarioParaExcluir.nome)
+            clicarExcluirColaborador(usuarioParaExcluir)
             confirmarExclusao()
 
             verificar { 
-                colaboradorNaoEstaNaLista(usuarioParaExcluir.nome)
+                colaboradorNaoEstaNaLista(usuarioParaExcluir)
             }
         }
     }
@@ -175,12 +176,12 @@ class ComposeColaboradoresTest {
         onGerenciadorScreen(composeTestRule) {
             cadastrar(usuario)
             
-            clicarExcluirColaborador(usuario.nome)
+            clicarExcluirColaborador(usuario)
             cancelarExclusao()
 
             verificar { 
                 dialogoExclusaoSumiu()
-                colaboradorNaLista(usuario.nome)
+                colaboradorNaLista(usuario)
             }
         }
     }

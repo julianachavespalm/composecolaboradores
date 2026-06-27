@@ -18,6 +18,8 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
     private val btnExcluirForm = hasText(res(R.string.acao_excluir))
     private val tagListaColaboradores = "lista_colaboradores"
 
+    private val tagCardColaborador = "card_colaborador"
+
     private fun node(matcher: SemanticsMatcher) = composeTestRule.onNode(matcher)
     private fun node(text: String) = composeTestRule.onNodeWithText(text)
     private fun scrollPara(text: String) = composeTestRule.onNodeWithTag(tagListaColaboradores).performScrollToNode(hasText(text))
@@ -43,14 +45,20 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
 
     fun cadastrar(u: Usuario) = clicarAbrirCadastro().preencherFormulario(u).clicarSalvar()
 
-    fun clicarEditarColaborador(nome: String) = apply {
-        scrollPara(nome)
-        node(hasContentDescription(res(R.string.label_editar)) and hasAnyAncestor(hasText(nome))).performClick()
+    fun clicarEditarColaborador(u: Usuario) = apply {
+        val cardMatcher = matcherCardColaborador(u)
+        scrollPara(cardMatcher)
+        node(hasContentDescription(res(R.string.label_editar)) and hasAnyAncestor(cardMatcher))
+            .performClick()
     }
 
-    fun clicarExcluirColaborador(nome: String) = apply {
-        scrollPara(nome)
-        node(hasContentDescription(res(R.string.acao_excluir)) and hasAnyAncestor(hasText(nome))).performClick()
+
+
+    fun clicarExcluirColaborador(u: Usuario) = apply {
+        val cardMatcher = matcherCardColaborador(u)
+        scrollPara(cardMatcher)
+        node(hasContentDescription(res(R.string.acao_excluir)) and hasAnyAncestor(cardMatcher))
+            .performClick()
     }
 
     fun confirmarExclusao() = apply { node(btnExcluirForm and hasAnyAncestor(isDialog())).performClick() }
@@ -59,13 +67,27 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
 
     fun verificar(block: Assercoes.() -> Unit) = Assercoes().apply(block)
 
+    private fun matcherCardColaborador(u: Usuario) = hasTestTag(tagCardColaborador) and
+            hasAnyDescendant(hasText(u.nome)) and
+            hasAnyDescendant(hasText(u.email)) and
+            hasAnyDescendant(hasText(u.nivel.descricao))
+
+    private fun scrollPara(matcher: SemanticsMatcher) =
+        composeTestRule.onNodeWithTag(tagListaColaboradores).performScrollToNode(matcher)
+
+
     inner class Assercoes {
-        fun colaboradorNaLista(n: String) { scrollPara(n); node(n).assertIsDisplayed() }
-        fun colaboradorApareceApenasUmaVez(n: String) {
-            composeTestRule.onAllNodes(hasText(n) and !hasSetTextAction() and !hasAnyAncestor(isDialog()))
+        fun colaboradorNaLista(u: Usuario) {
+            val matcher = matcherCardColaborador(u)
+            scrollPara(matcher)
+            node(matcher).assertIsDisplayed()
+        }
+        fun colaboradorApareceApenasUmaVez(u: Usuario) {
+            composeTestRule.onAllNodes(matcherCardColaborador(u) and !hasAnyAncestor(isDialog()))
                 .assertCountEquals(1)
         }
-        fun colaboradorNaoEstaNaLista(n: String) = node(n).assertDoesNotExist()
+        fun colaboradorNaoEstaNaLista(u: Usuario) = node(matcherCardColaborador(u)).assertDoesNotExist()
+
         fun erroColaboradorJaCadastrado() = node(res(R.string.erro_colaborador_ja_cadastrado)).assertIsDisplayed()
         fun erroEmailComEspaco() = node(res(R.string.erro_email_espaco)).assertIsDisplayed()
         fun botaoSalvarDesabilitado() = node(btnSalvar).assertIsNotEnabled()
@@ -86,7 +108,7 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
 
         object Massa {
             val valida = Usuario("Colaborador", "colaborador@email.com", Nivel.GERENCIA)
-            val validaParcialmenteDiferente = Usuario("Outro Colaborador", "colaborador@email.com", Nivel.GERENCIA)
+            val validaParcialmenteDiferente = Usuario("Colaborador", "colaborador@email.com", Nivel.FINANCEIRO)
             val comEspaco = Usuario("Erro", "user @email.com", Nivel.FINANCEIRO)
             val invalida = Usuario("Invalido", "email-sem-formato", Nivel.SUPORTE)
             val lista = listOf(
