@@ -8,11 +8,11 @@ on:
   workflow_dispatch:
     inputs:
       run-tests:
-        description: "Rodar unit tests?"
+        description: "Executar testes unitários (JUnit/Gradle). Use 'true' para sim ou 'false' para não."
         required: false
         default: "true"
       run-android:
-        description: "Rodar instrumented tests?"
+        description: "Executar testes instrumentados (Android). Use 'true' para sim ou 'false' para não."
         required: false
         default: "true"
   schedule:
