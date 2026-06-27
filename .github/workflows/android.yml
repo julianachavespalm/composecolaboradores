@@ -69,22 +69,12 @@ jobs:
         with:
           api-level: 24
           target: default
-          arch: x86
+          arch: x86_64
           profile: pixel_6
           disable-animations: true
-          emulator-options: "-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-metrics -delay-adb -no-snapshot-save"
+          emulator-options: "-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-metrics -no-snapshot-save"
           script: |
-            # Reinicia o servidor ADB para garantir estado limpo
-            adb kill-server
-            adb start-server
-            
-            # Aguarda o emulador aparecer
-            adb wait-for-device
-            
-            # Aguarda o boot completo do Android
-            adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
-            
-            # Desbloqueia a tela
+            # Desbloqueia a tela (a Action já aguarda o boot completo)
             adb shell input keyevent 82
             
             # Executa os testes instrumentados
