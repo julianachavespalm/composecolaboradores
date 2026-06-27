@@ -1,6 +1,6 @@
 package io.github.julianachavespalm.composecolaboradores.logic
 
-import io.github.julianachavespalm.composecolaboradores.data.repository.ColaboradorRepository
+import io.github.julianachavespalm.composecolaboradores.domain.repository.ColaboradorRepository
 import io.github.julianachavespalm.composecolaboradores.domain.model.Colaborador
 import io.github.julianachavespalm.composecolaboradores.domain.model.Nivel
 import org.junit.Assert
