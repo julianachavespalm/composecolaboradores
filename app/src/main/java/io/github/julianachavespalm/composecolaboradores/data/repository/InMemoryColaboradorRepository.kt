@@ -2,17 +2,18 @@ package io.github.julianachavespalm.composecolaboradores.data.repository
 
 import io.github.julianachavespalm.composecolaboradores.domain.model.Colaborador
 import io.github.julianachavespalm.composecolaboradores.domain.model.Nivel
+import io.github.julianachavespalm.composecolaboradores.domain.repository.ColaboradorRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class ColaboradorRepository {
+class InMemoryColaboradorRepository : ColaboradorRepository {
     private val _colaboradores = MutableStateFlow<List<Colaborador>>(emptyList())
-    val colaboradores: StateFlow<List<Colaborador>> = _colaboradores.asStateFlow()
+    override val colaboradores: StateFlow<List<Colaborador>> = _colaboradores.asStateFlow()
     
     private var proximoId = 1
 
-    fun salvar(colaborador: Colaborador) {
+    override fun salvar(colaborador: Colaborador) {
         if (colaborador.nome.isBlank() || 
             !isEmailValido(colaborador.email) || 
             colaborador.nivel == Nivel.NENHUM) {
@@ -39,12 +40,12 @@ class ColaboradorRepository {
         _colaboradores.value = listaAtual
     }
 
-    fun isEmailValido(email: String): Boolean {
+    override fun isEmailValido(email: String): Boolean {
         val emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$".toRegex()
         return email.matches(emailRegex)
     }
 
-    fun remover(id: Int) {
+    override fun remover(id: Int) {
         _colaboradores.value = _colaboradores.value.filter { it.id != id }
     }
 }
