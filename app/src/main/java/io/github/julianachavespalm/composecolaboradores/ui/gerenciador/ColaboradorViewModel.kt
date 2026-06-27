@@ -1,4 +1,4 @@
-package io.github.julianachavespalm.composecolaboradores.ui
+package io.github.julianachavespalm.composecolaboradores.ui.gerenciador
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
