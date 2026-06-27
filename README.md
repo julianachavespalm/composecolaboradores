@@ -44,14 +44,14 @@ A qualidade é garantida por uma suíte de testes abrangente e uma esteira de in
 ### CI/CD Pipeline
 Configurado via **GitHub Actions** (`.github/workflows/android.yml`), executando testes unitários e instrumentados em cada Pull Request:
 - **Estratégia**: Execução em ambiente Linux (Ubuntu) com aceleração **KVM** habilitada.
-- **Emulador**: Android API 27 (estabilidade e performance).
+- **Emulador**: Android API 29 (estabilidade e compatibilidade com imagens disponíveis no runner).
 
 ## 🚀 Como executar
 
 1. Clone o repositório.
 2. Abra no **Android Studio Ladybug** (ou superior).
 3. Para rodar os testes instrumentados localmente:
-   - Certifique-se de ter um emulador aberto (recomendado API 27+).
+   - Certifique-se de ter um emulador aberto (recomendado API 29+).
    - Execute: `./gradlew connectedDebugAndroidTest`
 
 ---
