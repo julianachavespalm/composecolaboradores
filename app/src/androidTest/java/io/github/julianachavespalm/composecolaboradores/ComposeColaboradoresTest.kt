@@ -49,6 +49,7 @@ class ComposeColaboradoresTest {
     @Test
     fun deveExibirErroAoDigitarEmailComEspaco() {
         onGerenciadorScreen(composeTestRule) {
+            clicarAbrirCadastro()
             preencherFormulario(Massa.comEspaco)
             
             verificar { erroEmailComEspaco() }
@@ -58,6 +59,7 @@ class ComposeColaboradoresTest {
     @Test
     fun botaoSalvarDeveFicarDesabilitadoParaEmailInvalido() {
         onGerenciadorScreen(composeTestRule) {
+            clicarAbrirCadastro()
             preencherFormulario(Massa.invalido)
             
             verificar { botaoSalvarDesabilitado() }
@@ -67,6 +69,7 @@ class ComposeColaboradoresTest {
     @Test
     fun preenchimentoParcialDeveExibirBotoesDeAcao() {
         onGerenciadorScreen(composeTestRule) {
+            clicarAbrirCadastro()
             preencherFormulario(Massa.valido)
             
             verificar { botoesAcaoVisiveis() }
@@ -124,9 +127,11 @@ class ComposeColaboradoresTest {
     @Test
     fun deveLimparFormularioAoCancelarCadastro() {
         onGerenciadorScreen(composeTestRule) {
+            clicarAbrirCadastro()
             preencherFormulario(Massa.valido)
             clicarCancelar()
-
+            
+            clicarAbrirCadastro()
             verificar { 
                 formularioVazio() 
             }
