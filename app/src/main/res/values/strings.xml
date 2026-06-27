@@ -14,4 +14,5 @@
     <string name="confirmacao_excluir_mensagem">Tem certeza que deseja remover este colaborador? Esta ação não pode ser desfeita.</string>
     <string name="erro_email_espaco">E-mail não deve conter espaços</string>
     <string name="erro_email_invalido">Digite um e-mail válido (ex: nome@dominio.com)</string>
+    <string name="erro_colaborador_ja_cadastrado">Colaborador já cadastrado</string>
 </resources>

@@ -21,6 +21,13 @@ class ColaboradorRepository {
 
         val listaAtual = _colaboradores.value.toMutableList()
         if (colaborador.id == 0) {
+            val jaExiste = listaAtual.any { 
+                it.nome == colaborador.nome && 
+                it.email == colaborador.email && 
+                it.nivel == colaborador.nivel 
+            }
+            if (jaExiste) return
+
             listaAtual.add(colaborador.copy(id = proximoId++))
         } else {
             val index = listaAtual.indexOfFirst { it.id == colaborador.id }

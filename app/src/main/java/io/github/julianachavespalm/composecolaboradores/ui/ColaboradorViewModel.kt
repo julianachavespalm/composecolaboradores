@@ -32,8 +32,16 @@ class ColaboradorViewModel(
     val isEmailValido: Boolean
         get() = validarEmailUseCase(email)
 
+    val jaExiste: Boolean
+        get() = colaboradores.value.any {
+            it.nome.equals(nome, ignoreCase = true) &&
+            it.email.equals(email, ignoreCase = true) &&
+            it.nivel == nivelSelecionado &&
+            it.id != colaboradorEmEdicao?.id
+        }
+
     val podeSalvar: Boolean
-        get() = nome.isNotBlank() && isEmailValido && nivelSelecionado != Nivel.NENHUM
+        get() = nome.isNotBlank() && isEmailValido && nivelSelecionado != Nivel.NENHUM && !jaExiste
 
     val estaEditandoOuPreenchido: Boolean
         get() = nome.isNotEmpty() || email.isNotEmpty() || nivelSelecionado != Nivel.NENHUM || colaboradorEmEdicao != null

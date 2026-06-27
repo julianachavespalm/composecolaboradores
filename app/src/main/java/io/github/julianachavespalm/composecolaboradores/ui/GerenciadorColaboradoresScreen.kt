@@ -153,7 +153,10 @@ fun ColaboradorForm(
             onValueChange = { viewModel.onNomeChange(it) },
             label = stringResource(R.string.label_nome),
             icon = Icons.Default.Person,
-            modifier = Modifier.focusRequester(focusRequester),
+            modifier = Modifier
+                .focusRequester(focusRequester)
+                .testTag("campo_nome"),
+            isError = viewModel.jaExiste,
             onImeAction = { focusManager.moveFocus(androidx.compose.ui.focus.FocusDirection.Down) }
         )
 
@@ -165,11 +168,16 @@ fun ColaboradorForm(
             label = stringResource(R.string.label_email),
             icon = Icons.Default.Email,
             keyboardType = KeyboardType.Email,
-            isError = viewModel.email.isNotBlank() && !viewModel.isEmailValido,
-            supportingText = if (viewModel.email.isNotBlank() && !viewModel.isEmailValido) {
-                if (viewModel.email.contains(" ")) stringResource(R.string.erro_email_espaco)
-                else stringResource(R.string.erro_email_invalido)
-            } else null,
+            modifier = Modifier.testTag("campo_email"),
+            isError = (viewModel.email.isNotBlank() && !viewModel.isEmailValido) || viewModel.jaExiste,
+            supportingText = when {
+                viewModel.email.isNotBlank() && !viewModel.isEmailValido -> {
+                    if (viewModel.email.contains(" ")) stringResource(R.string.erro_email_espaco)
+                    else stringResource(R.string.erro_email_invalido)
+                }
+                viewModel.jaExiste -> stringResource(R.string.erro_colaborador_ja_cadastrado)
+                else -> null
+            },
             onImeAction = { menuExpandido = true }
         )
 
@@ -188,7 +196,9 @@ fun ColaboradorForm(
                         Icon(Icons.Default.ArrowDropDown, contentDescription = null)
                     }
                 },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("campo_nivel"),
                 shape = MaterialTheme.shapes.medium
             )
             DropdownMenu(
@@ -220,7 +230,9 @@ fun ColaboradorForm(
                     viewModel.limparCampos()
                     focusManager.clearFocus()
                 },
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag("botao_cancelar"),
                 shape = MaterialTheme.shapes.medium,
                 enabled = viewModel.estaEditandoOuPreenchido
             ) {
@@ -232,7 +244,9 @@ fun ColaboradorForm(
                     viewModel.salvar()
                     focusManager.clearFocus()
                 },
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag("botao_salvar"),
                 enabled = viewModel.podeSalvar,
                 shape = MaterialTheme.shapes.medium
             ) {
@@ -358,13 +372,17 @@ fun ConfirmacaoExclusaoDialog(
         confirmButton = {
             Button(
                 onClick = onConfirm,
+                modifier = Modifier.testTag("botao_excluir"),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
             ) {
                 Text(stringResource(R.string.acao_excluir))
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
+            TextButton(
+                onClick = onDismiss,
+                modifier = Modifier.testTag("botao_cancelar")
+            ) {
                 Text(stringResource(R.string.acao_cancelar))
             }
         },

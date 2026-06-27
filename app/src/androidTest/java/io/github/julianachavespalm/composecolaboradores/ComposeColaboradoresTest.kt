@@ -2,6 +2,7 @@ package io.github.julianachavespalm.composecolaboradores
 
 import androidx.compose.ui.test.junit4.createComposeRule
 import io.github.julianachavespalm.composecolaboradores.data.repository.ColaboradorRepository
+import io.github.julianachavespalm.composecolaboradores.domain.model.Nivel
 import io.github.julianachavespalm.composecolaboradores.domain.usecase.GetColaboradoresUseCase
 import io.github.julianachavespalm.composecolaboradores.domain.usecase.RemoverColaboradorUseCase
 import io.github.julianachavespalm.composecolaboradores.domain.usecase.SalvarColaboradorUseCase
@@ -40,9 +41,38 @@ class ComposeColaboradoresTest {
     @Test
     fun deveSalvarCadastroValidoNaLista() {
         onGerenciadorScreen(composeTestRule) {
-            cadastrar(Massa.valido)
+            cadastrar(Massa.valida)
             
-            verificar { colaboradorNaLista(Massa.valido.nome) }
+            verificar { colaboradorNaLista(Massa.valida.nome) }
+        }
+    }
+    
+    @Test
+    fun naoDevePermitirCadastroComDadosRepetidos() {
+        onGerenciadorScreen(composeTestRule) {
+            cadastrar(Massa.valida)
+            
+            clicarAbrirCadastro()
+            preencherFormulario(Massa.valida)
+
+            verificar {
+                erroColaboradorJaCadastrado()
+                botaoSalvarDesabilitado()
+                colaboradorApareceApenasUmaVez(Massa.valida.nome)
+            }
+        }
+    }
+    
+    @Test
+    fun devePermitirCadastroComDadosParcialmenteRepetidos() {
+        onGerenciadorScreen(composeTestRule) {
+            cadastrar(Massa.valida)
+            cadastrar(Massa.validaParcialmenteDiferente)
+
+            verificar {
+                colaboradorApareceApenasUmaVez(Massa.valida.nome)
+                colaboradorApareceApenasUmaVez(Massa.validaParcialmenteDiferente.nome)
+            }
         }
     }
     
@@ -60,7 +90,7 @@ class ComposeColaboradoresTest {
     fun botaoSalvarDeveFicarDesabilitadoParaEmailInvalido() {
         onGerenciadorScreen(composeTestRule) {
             clicarAbrirCadastro()
-            preencherFormulario(Massa.invalido)
+            preencherFormulario(Massa.invalida)
             
             verificar { botaoSalvarDesabilitado() }
         }
@@ -70,7 +100,7 @@ class ComposeColaboradoresTest {
     fun preenchimentoParcialDeveExibirBotoesDeAcao() {
         onGerenciadorScreen(composeTestRule) {
             clicarAbrirCadastro()
-            preencherFormulario(Massa.valido)
+            preencherFormulario(Massa.valida)
             
             verificar { botoesAcaoVisiveis() }
         }
@@ -92,7 +122,7 @@ class ComposeColaboradoresTest {
     
     @Test 
     fun devePermitirEditarCadastro() {
-        val usuarioOriginal = Massa.valido
+        val usuarioOriginal = Massa.valida
         val nomeEditado = "Usuario Atualizado"
 
         onGerenciadorScreen(composeTestRule) {
@@ -110,7 +140,7 @@ class ComposeColaboradoresTest {
 
     @Test
     fun devePermitirExcluirColaborador() {
-        val usuarioParaExcluir = Massa.valido
+        val usuarioParaExcluir = Massa.valida
 
         onGerenciadorScreen(composeTestRule) {
             cadastrar(usuarioParaExcluir)
@@ -128,7 +158,7 @@ class ComposeColaboradoresTest {
     fun deveLimparFormularioAoCancelarCadastro() {
         onGerenciadorScreen(composeTestRule) {
             clicarAbrirCadastro()
-            preencherFormulario(Massa.valido)
+            preencherFormulario(Massa.valida)
             clicarCancelar()
             
             clicarAbrirCadastro()
@@ -140,7 +170,7 @@ class ComposeColaboradoresTest {
 
     @Test
     fun deveManterColaboradorAoCancelarExclusao() {
-        val usuario = Massa.valido
+        val usuario = Massa.valida
 
         onGerenciadorScreen(composeTestRule) {
             cadastrar(usuario)

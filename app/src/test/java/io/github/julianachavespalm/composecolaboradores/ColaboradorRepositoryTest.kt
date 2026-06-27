@@ -1,188 +1,159 @@
 package io.github.julianachavespalm.composecolaboradores
 
 import io.github.julianachavespalm.composecolaboradores.data.repository.ColaboradorRepository
-import io.github.julianachavespalm.composecolaboradores.domain.model.Colaborador
 import io.github.julianachavespalm.composecolaboradores.domain.model.Nivel
-import org.junit.Assert.*
-import org.junit.Before
+import io.github.julianachavespalm.composecolaboradores.logic.ColaboradorRepositoryLogic
+import io.github.julianachavespalm.composecolaboradores.logic.ColaboradorRepositoryLogic.Companion.Massa
+import io.github.julianachavespalm.composecolaboradores.logic.ColaboradorRepositoryLogic.Companion.umColaborador
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/**
- * Testes unitários do [ColaboradorRepository].
- *
- * Valida operações de:
- * - Cadastro
- * - Atualização
- * - Remoção
- * - Tratamento de registros inexistentes
- */
 class ColaboradorRepositoryTest {
 
-    private lateinit var repository: ColaboradorRepository
+    private val repository = ColaboradorRepository()
+    private val logic = ColaboradorRepositoryLogic(repository)
 
-    @Before
-    fun setUp() {
-        repository = ColaboradorRepository()
+    @Test
+    fun `Deve iniciar com lista vazia`() {
+        logic.verificarListaVazia()
     }
 
     @Test
-    fun `deve cadastrar colaborador atribuindo id automaticamente`() {
-        val colaborador = criarColaborador(
-            nome = "Ralf",
-            email = "ralf@email.com",
-            nivel = Nivel.SUPORTE
-        )
-
-        repository.salvar(colaborador)
-
-        val resultado = repository.colaboradores.value
-
-        assertEquals(1, resultado.size)
-        assertEquals(1, resultado.first().id)
-        assertEquals("Ralf", resultado.first().nome)
-        assertEquals("ralf@email.com", resultado.first().email)
-        assertEquals(Nivel.SUPORTE, resultado.first().nivel)
+    fun `Deve cadastrar colaborador com sucesso`() {
+        logic.salvar(Massa.valido)
+             .verificarColaboradorNaPosicao(0) {
+                assertEquals(1, id)
+                assertEquals(Massa.valido.nome, nome)
+                assertEquals(Massa.valido.email, email)
+                assertEquals(Massa.valido.nivel, nivel)
+            }
     }
 
     @Test
-    fun `deve atualizar colaborador existente quando id informado`() {
-        val colaboradorSalvo = cadastrarColaborador()
-
-        val colaboradorAtualizado = colaboradorSalvo.copy(
-            nome = "Editado",
-            email = "editado@email.com",
-            nivel = Nivel.GERENCIA
-        )
-
-        repository.salvar(colaboradorAtualizado)
-
-        val resultado = repository.colaboradores.value.first()
-
-        assertEquals("Editado", resultado.nome)
-        assertEquals("editado@email.com", resultado.email)
-        assertEquals(Nivel.GERENCIA, resultado.nivel)
-        assertEquals(colaboradorSalvo.id, resultado.id)
+    fun `Deve aceitar todos os níveis válidos de colaborador`() {
+        Massa.niveisValidos.forEachIndexed { index, nivel ->
+            logic.salvar(umColaborador(nome = "Nome $index", nivel = nivel))
+                 .verificarColaboradorNaPosicao(index) {
+                    assertEquals(nivel, this.nivel)
+                }
+        }
+        logic.verificarTamanhoDaLista(Massa.niveisValidos.size)
     }
 
     @Test
-    fun `deve remover colaborador existente`() {
-        val colaboradorSalvo = cadastrarColaborador()
-
-        repository.remover(colaboradorSalvo.id)
-
-        assertTrue(repository.colaboradores.value.isEmpty())
+    fun `Deve incrementar ID a cada novo cadastro e manter sequência após remoções`() {
+        logic.salvar(umColaborador(nome = "Primeiro"))
+             .salvar(umColaborador(nome = "Segundo"))
+             .remover(1)
+             .salvar(umColaborador(nome = "Terceiro"))
+             .verificarTamanhoDaLista(2)
+             .verificarColaboradorNaPosicao(0) { assertEquals(2, id) }
+             .verificarColaboradorNaPosicao(1) { assertEquals(3, id) }
     }
 
     @Test
-    fun `nao deve alterar lista ao atualizar colaborador inexistente`() {
-        cadastrarColaborador()
+    fun `Deve atualizar dados de um colaborador existente mantendo sua posição na lista`() {
+        logic.salvar(umColaborador(nome = "Item 1"))
+             .salvar(umColaborador(nome = "Item 2"))
+             .salvar(umColaborador(nome = "Item 3"))
+        
+        val editado = logic.obterEstadoAtual()[1].copy(nome = "Item 2 Editado", nivel = Nivel.FINANCEIRO)
 
-        val estadoInicial = repository.colaboradores.value.toList()
-
-        repository.salvar(
-            Colaborador(
-                id = 99,
-                nome = "Editado",
-                email = "editado@email.com",
-                nivel = Nivel.GERENCIA
-            )
-        )
-
-        assertEquals(estadoInicial, repository.colaboradores.value)
+        logic.salvar(editado)
+             .verificarTamanhoDaLista(3)
+             .verificarColaboradorNaPosicao(1) {
+                assertEquals("Item 2 Editado", nome)
+                assertEquals(Nivel.FINANCEIRO, nivel)
+                assertEquals(2, id)
+            }
+             .verificarColaboradorNaPosicao(0) { assertEquals("Item 1", nome) }
+             .verificarColaboradorNaPosicao(2) { assertEquals("Item 3", nome) }
     }
 
     @Test
-    fun `nao deve alterar lista ao remover colaborador inexistente`() {
-        cadastrarColaborador()
+    fun `Não deve cadastrar ou atualizar colaborador com dados inválidos`() {
+        Massa.invalidos.forEach { colaborador ->
+            logic.salvar(colaborador).verificarListaVazia()
+        }
 
-        val estadoInicial = repository.colaboradores.value.toList()
-
-        repository.remover(99)
-
-        assertEquals(estadoInicial, repository.colaboradores.value)
+        logic.cadastrar(nome = "Valido")
+        val salvo = logic.obterEstadoAtual().first()
+        val invalido = salvo.copy(nome = "")
+        
+        logic.salvar(invalido)
+             .verificarColaboradorNaPosicao(0) {
+                assertEquals("Valido", nome)
+            }
     }
 
     @Test
-    fun `nao deve salvar colaborador sem nome`() {
-        val colaborador = criarColaborador("", "email@email.com", Nivel.ADMINISTRATIVO)
-        repository.salvar(colaborador)
-        val resultado = repository.colaboradores.value
-        assertTrue(resultado.isEmpty())
+    fun `Nao deve alterar a lista ao tentar atualizar um id inexistente`() {
+        logic.cadastrar()
+        val estadoAntes = logic.obterEstadoAtual()
+
+        logic.salvar(umColaborador(id = 99, nome = "Fantasma"))
+             .verificarEstadoDaListaNaoMudou(estadoAntes)
     }
 
     @Test
-    fun `nao deve salvar colaborador com nivel NENHUM`() {
-        val colaborador = criarColaborador("Ralf", "ralf@email.com", Nivel.NENHUM)
-        repository.salvar(colaborador)
-        val resultado = repository.colaboradores.value
-        assertTrue(resultado.isEmpty())
+    fun `Deve remover colaborador por id`() {
+        logic.cadastrar { salvo ->
+            logic.remover(salvo.id)
+                 .verificarListaVazia()
+        }
     }
 
     @Test
-    fun `nao deve salvar colaborador sem email`() {
-        val colaborador = criarColaborador("Ralf", "", Nivel.ADMINISTRATIVO)
-        repository.salvar(colaborador)
-        val resultado = repository.colaboradores.value
-        assertTrue(resultado.isEmpty())
+    fun `Nao deve alterar a lista ao remover id inexistente`() {
+        logic.cadastrar()
+        val estadoAntes = logic.obterEstadoAtual()
+
+        logic.remover(99)
+             .verificarEstadoDaListaNaoMudou(estadoAntes)
     }
 
     @Test
-    fun `nao deve salvar cadastro com todos dados em branco`() {
-        val colaborador = criarColaborador("", "", Nivel.NENHUM)
-        repository.salvar(colaborador)
-        val resultado = repository.colaboradores.value
-        assertTrue(resultado.isEmpty())
+    fun `Nao deve permitir novo cadastro se todos os campos forem 100% iguais a um existente`() {
+        logic.salvar(Massa.valido)
+             .salvar(Massa.valido)
+             .verificarTamanhoDaLista(1)
+             .verificarColaboradorNaPosicao(0) { assertEquals(1, id) }
     }
 
     @Test
-    fun `nao deve salvar colaborador com email contendo espaco`() {
-        val colaborador = criarColaborador("Ralf", "ralf @email.com", Nivel.ADMINISTRATIVO)
-        repository.salvar(colaborador)
-        val resultado = repository.colaboradores.value
-        assertTrue(resultado.isEmpty())
+    fun `Deve permitir cadastros com dados parcialmente repetidos`() {
+        val base = Massa.valido
+        val emailDiferente = base.copy(email = "outro@email.com")
+        val nomeDiferente = base.copy(nome = "Outro Nome")
+        val nivelDiferente = base.copy(nivel = Nivel.SUPORTE)
+
+        logic.salvar(base)
+             .salvar(emailDiferente)
+             .salvar(nomeDiferente)
+             .salvar(nivelDiferente)
+             .verificarTamanhoDaLista(4)
     }
 
     @Test
-    fun `nao deve salvar colaborador com email invalido sem ponto`() {
-        val colaborador = criarColaborador("Ralf", "ralf@email", Nivel.ADMINISTRATIVO)
-        repository.salvar(colaborador)
-        assertTrue(repository.colaboradores.value.isEmpty())
+    fun `Deve validar e-mails`() {
+        Massa.emailsValidos.forEach { email ->
+            assertTrue("Deveria ser válido: $email", repository.isEmailValido(email))
+        }
+        
+        Massa.emailsInvalidos.forEach { email ->
+            assertFalse("Deveria ser inválido: $email", repository.isEmailValido(email))
+        }
     }
-
+    
     @Test
-    fun `nao deve salvar colaborador com email invalido sem arroba`() {
-        val colaborador = criarColaborador("Ralf", "ralf.email.com", Nivel.ADMINISTRATIVO)
-        repository.salvar(colaborador)
-        assertTrue(repository.colaboradores.value.isEmpty())
+    fun `Deve manter ordem de cadastro na lista ao usar salvar novo cadastro`() {
+        logic.salvarMassa(Massa.lista)
+             .verificarTamanhoDaLista(Massa.lista.size)
+             .verificarColaboradorNaPosicao(0) { assertEquals(Massa.lista[0].nome, nome) }
+             .verificarColaboradorNaPosicao(1) { assertEquals(Massa.lista[1].nome, nome) }
+             .verificarColaboradorNaPosicao(2) { assertEquals(Massa.lista[2].nome, nome) }
+
     }
-
-    @Test
-    fun `nao deve salvar colaborador com email invalido caracteres proibidos`() {
-        val colaborador = criarColaborador("Ralf", "ralf!#$@email.com", Nivel.ADMINISTRATIVO)
-        repository.salvar(colaborador)
-        assertTrue(repository.colaboradores.value.isEmpty())
-    }
-
-    private fun cadastrarColaborador(): Colaborador {
-        repository.salvar(
-            criarColaborador(
-                nome = "Original",
-                email = "original@email.com",
-                nivel = Nivel.ADMINISTRATIVO
-            )
-        )
-
-        return repository.colaboradores.value.first()
-    }
-
-    private fun criarColaborador(
-        nome: String,
-        email: String,
-        nivel: Nivel
-    ) = Colaborador(
-        id = 0,
-        nome = nome,
-        email = email,
-        nivel = nivel
-    )
 }

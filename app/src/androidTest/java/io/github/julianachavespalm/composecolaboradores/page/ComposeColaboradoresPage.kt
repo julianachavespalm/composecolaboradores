@@ -11,13 +11,11 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
     private fun res(id: Int) = context.getString(id)
 
-
-    private val fieldNome = hasText(res(R.string.label_nome))
-    private val fieldEmail = hasText(res(R.string.label_email))
-    private val btnSalvar = hasText(res(R.string.acao_salvar))
-    private val btnAtualizar = hasText(res(R.string.acao_atualizar))
-    private val btnCancelar = hasText(res(R.string.acao_cancelar))
-    private val btnExcluir = hasText(res(R.string.acao_excluir))
+    private val fieldNome = hasTestTag("campo_nome")
+    private val fieldEmail = hasTestTag("campo_email")
+    private val btnSalvar = hasTestTag("botao_salvar")
+    private val btnCancelar = hasTestTag("botao_cancelar")
+    private val btnExcluirForm = hasText(res(R.string.acao_excluir))
     private val tagListaColaboradores = "lista_colaboradores"
 
     private fun node(matcher: SemanticsMatcher) = composeTestRule.onNode(matcher)
@@ -34,8 +32,7 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
     }
 
     fun clicarSalvar() = apply {
-        try { node(btnSalvar).performClick() } 
-        catch (e: Throwable) { node(btnAtualizar).performClick() }
+        node(btnSalvar).performClick()
     }
 
     fun clicarAbrirCadastro() = apply {
@@ -56,7 +53,7 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
         node(hasContentDescription(res(R.string.acao_excluir)) and hasAnyAncestor(hasText(nome))).performClick()
     }
 
-    fun confirmarExclusao() = apply { node(btnExcluir and hasAnyAncestor(isDialog())).performClick() }
+    fun confirmarExclusao() = apply { node(btnExcluirForm and hasAnyAncestor(isDialog())).performClick() }
     fun clicarCancelar() = apply { node(btnCancelar and !hasAnyAncestor(isDialog())).performClick() }
     fun cancelarExclusao() = apply { node(btnCancelar and hasAnyAncestor(isDialog())).performClick() }
 
@@ -64,14 +61,21 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
 
     inner class Assercoes {
         fun colaboradorNaLista(n: String) { scrollPara(n); node(n).assertIsDisplayed() }
+        fun colaboradorApareceApenasUmaVez(n: String) {
+            composeTestRule.onAllNodes(hasText(n) and !hasSetTextAction() and !hasAnyAncestor(isDialog()))
+                .assertCountEquals(1)
+        }
         fun colaboradorNaoEstaNaLista(n: String) = node(n).assertDoesNotExist()
+        fun erroColaboradorJaCadastrado() = node(res(R.string.erro_colaborador_ja_cadastrado)).assertIsDisplayed()
         fun erroEmailComEspaco() = node(res(R.string.erro_email_espaco)).assertIsDisplayed()
         fun botaoSalvarDesabilitado() = node(btnSalvar).assertIsNotEnabled()
-        fun botoesAcaoVisiveis() { node(btnSalvar).assertIsDisplayed(); node(btnCancelar and !hasAnyAncestor(isDialog())).assertIsDisplayed() }
+        fun botoesAcaoVisiveis() { 
+            node(btnSalvar).assertIsDisplayed()
+            node(btnCancelar and !hasAnyAncestor(isDialog())).assertIsDisplayed() 
+        }
         fun formularioVazio() {
-            node(res(R.string.label_nome)).assertIsDisplayed()
-            node(res(R.string.label_email)).assertIsDisplayed()
-            node(Massa.valido.nome).assertDoesNotExist()
+            node(fieldNome).assertTextContains("")
+            node(fieldEmail).assertTextContains("")
         }
         fun dialogoExclusaoSumiu() = node(res(R.string.confirmacao_excluir_titulo)).assertDoesNotExist()
     }
@@ -81,9 +85,10 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
             ComposeColaboradoresPage(rule).apply(block)
 
         object Massa {
-            val valido = Usuario("Valido", "valido@email.com", Nivel.GERENCIA)
+            val valida = Usuario("Colaborador", "colaborador@email.com", Nivel.GERENCIA)
+            val validaParcialmenteDiferente = Usuario("Colaborador", "colaborador@email.com", Nivel.GERENCIA)
             val comEspaco = Usuario("Erro", "user @email.com", Nivel.FINANCEIRO)
-            val invalido = Usuario("Invalido", "email-sem-formato", Nivel.SUPORTE)
+            val invalida = Usuario("Invalido", "email-sem-formato", Nivel.SUPORTE)
             val lista = listOf(
                 Usuario("Admin", "admin@email.com", Nivel.ADMINISTRATIVO),
                 Usuario("Finance", "fin@email.com", Nivel.FINANCEIRO),
