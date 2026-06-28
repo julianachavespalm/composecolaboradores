@@ -22,8 +22,10 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
     private val tagCardColaborador = TestTags.CARD_COLABORADOR
 
     private fun node(matcher: SemanticsMatcher) = composeTestRule.onNode(matcher)
-    private fun node(text: String) = composeTestRule.onNodeWithText(text)
-    private fun scrollPara(text: String) = composeTestRule.onNodeWithTag(tagListaColaboradores).performScrollToNode(hasText(text))
+    private fun node(resId: Int) = composeTestRule.onNodeWithText(res(resId))
+    private fun scrollPara(matcher: SemanticsMatcher) =
+        composeTestRule.onNodeWithTag(tagListaColaboradores).performScrollToNode(matcher)
+    private fun scrollPara(resId: Int) = scrollPara(hasText(res(resId)))
 
     data class Usuario(val nome: String, val email: String, val nivel: Nivel)
 
@@ -42,9 +44,7 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
     }
 
     fun clicarAbrirCadastro() = apply {
-        composeTestRule.onNodeWithTag(tagListaColaboradores).performScrollToNode(
-            hasText(res(R.string.label_cadastrar)) or hasText(res(R.string.label_editar))
-        )
+        scrollPara(hasText(res(R.string.label_cadastrar)) or hasText(res(R.string.label_editar)))
     }
 
     fun cadastrar(u: Usuario) = clicarAbrirCadastro().preencherFormulario(u).clicarSalvar()
@@ -86,10 +86,7 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
     private fun matcherCardColaborador(u: Usuario) = hasTestTag(tagCardColaborador) and
             hasAnyDescendant(hasText(u.nome)) and
             hasAnyDescendant(hasText(u.email)) and
-            hasAnyDescendant(hasText(u.nivel.descricao))
-
-    private fun scrollPara(matcher: SemanticsMatcher) =
-        composeTestRule.onNodeWithTag(tagListaColaboradores).performScrollToNode(matcher)
+            hasAnyDescendant(hasText(res(u.nivel.descricao)))
 
 
     inner class Assercoes {
@@ -106,8 +103,8 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
         }
         fun colaboradorNaoEstaNaLista(u: Usuario) = node(matcherCardColaborador(u)).assertDoesNotExist()
 
-        fun erroColaboradorJaCadastrado() = node(res(R.string.erro_colaborador_ja_cadastrado)).assertIsDisplayed()
-        fun erroEmailComEspaco() = node(res(R.string.erro_email_espaco)).assertIsDisplayed()
+        fun erroColaboradorJaCadastrado() = node(R.string.erro_colaborador_ja_cadastrado).assertIsDisplayed()
+        fun erroEmailComEspaco() = node(R.string.erro_email_espaco).assertIsDisplayed()
         fun botaoSalvarDesabilitado() = node(btnSalvar).assertIsNotEnabled()
         fun botoesAcaoVisiveis() { 
             node(btnSalvar).assertIsDisplayed()
@@ -118,7 +115,7 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
             node(fieldEmail).assertTextContains(res(R.string.label_email))
             node(hasTestTag(TestTags.CAMPO_NIVEL)).assertTextContains(res(R.string.label_nivel))
         }
-        fun dialogoExclusaoSumiu() = node(res(R.string.confirmacao_excluir_titulo)).assertDoesNotExist()
+        fun dialogoExclusaoSumiu() = node(R.string.confirmacao_excluir_titulo).assertDoesNotExist()
     }
 
     companion object {

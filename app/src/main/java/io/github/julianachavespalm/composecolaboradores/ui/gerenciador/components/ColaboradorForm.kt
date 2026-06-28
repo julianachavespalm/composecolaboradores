@@ -76,7 +76,7 @@ fun ColaboradorForm(
 
         Box(modifier = Modifier.fillMaxWidth()) {
             OutlinedTextField(
-                value = if (nivelSelecionado == Nivel.NENHUM) "" else nivelSelecionado.descricao,
+                value = if (nivelSelecionado == Nivel.NENHUM) "" else stringResource(nivelSelecionado.descricao),
                 onValueChange = {},
                 readOnly = true,
                 label = { Text(stringResource(R.string.label_nivel)) },
@@ -99,7 +99,7 @@ fun ColaboradorForm(
             ) {
                 Nivel.entries.filter { it != Nivel.NENHUM }.forEach { nivel ->
                     DropdownMenuItem(
-                        text = { Text(nivel.descricao) },
+                        text = { Text(stringResource(nivel.descricao)) },
                         onClick = {
                             onNivelChange(nivel)
                             menuExpandido = false

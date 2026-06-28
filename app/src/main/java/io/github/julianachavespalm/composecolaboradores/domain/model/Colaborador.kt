@@ -1,12 +1,16 @@
 package io.github.julianachavespalm.composecolaboradores.domain.model
 
-enum class Nivel(val descricao: String) {
-    NENHUM("Selecione um nível"),
-    ADMINISTRATIVO("Administrativo"),
-    FINANCEIRO("Financeiro"),
-    GERENCIA("Gerência"),
-    SUPORTE("Suporte")
+import androidx.annotation.StringRes
+import io.github.julianachavespalm.composecolaboradores.R
+
+enum class Nivel(@StringRes val descricao: Int) {
+    NENHUM(R.string.placeholder_nivel),
+    ADMINISTRATIVO(R.string.nivel_administrativo),
+    FINANCEIRO(R.string.nivel_financeiro),
+    GERENCIA(R.string.nivel_gerencia),
+    SUPORTE(R.string.nivel_suporte)
 }
+
 
 data class Colaborador(
     val id: Int,
