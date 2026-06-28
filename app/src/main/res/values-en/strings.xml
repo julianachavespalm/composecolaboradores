@@ -11,8 +11,8 @@
     <string name="acao_atualizar">Update details</string>
     <string name="acao_cancelar">Cancel</string>
     <string name="acao_excluir">Delete</string>
-    <string name="confirmacao_excluir_titulo">Confirm Deletion</string>
-    <string name="confirmacao_excluir_mensagem">Are you sure you want to remove this team member? This action cannot be undone.</string>
+    <string name="confirmacao_excluir_titulo">Confirm delete</string>
+    <string name="confirmacao_excluir_mensagem">Are you sure you want to delete this team member? This action cannot be undone.</string>
     <string name="erro_email_espaco">Please remove spaces from the email</string>
     <string name="erro_email_invalido">Enter a valid email (e.g., name@domain.com)</string>
     <string name="erro_colaborador_ja_cadastrado">Team member already registered</string>
