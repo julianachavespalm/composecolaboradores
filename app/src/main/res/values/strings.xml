@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Compose Colaboradores</string>
-    <string name="label_cadastrar">Cadastrar colaborador</string>
+    <string name="label_cadastrar">Cadastrar Colaborador</string>
     <string name="label_editar">Editar cadastro</string>
-    <string name="label_nome">Nome</string>
+    <string name="label_nome">Nome completo</string>
     <string name="label_email">E-mail</string>
     <string name="label_nivel">Nível</string>
     <string name="placeholder_nivel">Selecione um nível</string>
@@ -16,4 +16,8 @@
     <string name="erro_email_invalido">Digite um e-mail válido (ex: nome@dominio.com)</string>
     <string name="erro_colaborador_ja_cadastrado">Colaborador já cadastrado</string>
     <string name="nenhum_colaborador_cadastrado">Nenhum colaborador cadastrado</string>
+    <string name="nivel_administrativo">Administrativo</string>
+    <string name="nivel_financeiro">Financeiro</string>
+    <string name="nivel_gerencia">Gerência</string>
+    <string name="nivel_suporte">Suporte</string>
 </resources>

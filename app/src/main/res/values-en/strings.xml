@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Compose Team</string>
+    <string name="label_cadastrar">Add Team Member</string>
+    <string name="label_editar">Edit member details</string>
+    <string name="label_nome">Full name</string>
+    <string name="label_email">Email</string>
+    <string name="label_nivel">Role</string>
+    <string name="placeholder_nivel">Select a role</string>
+    <string name="acao_salvar">Save</string>
+    <string name="acao_atualizar">Update details</string>
+    <string name="acao_cancelar">Cancel</string>
+    <string name="acao_excluir">Delete</string>
+    <string name="confirmacao_excluir_titulo">Confirm Deletion</string>
+    <string name="confirmacao_excluir_mensagem">Are you sure you want to remove this team member? This action cannot be undone.</string>
+    <string name="erro_email_espaco">Please remove spaces from the email</string>
+    <string name="erro_email_invalido">Enter a valid email (e.g., name@domain.com)</string>
+    <string name="erro_colaborador_ja_cadastrado">Team member already registered</string>
+    <string name="nenhum_colaborador_cadastrado">No team members found</string>
+    <string name="nivel_administrativo">Administrative</string>
+    <string name="nivel_gerencia">Management</string>
+    <string name="nivel_suporte">Support</string>
+    <string name="nivel_financeiro">Finance</string>
+</resources>

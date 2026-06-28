@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Compose Collaborateurs</string>
+    <string name="label_cadastrar">Ajouter um collaborateur</string>
+    <string name="label_editar">Modifier</string>
+    <string name="label_nome">Nom complet</string>
+    <string name="label_email">E-mail</string>
+    <string name="label_nivel">Rôle</string>
+    <string name="placeholder_nivel">Sélectionner un rôle</string>
+    <string name="acao_salvar">Enregistrer</string>
+    <string name="acao_atualizar">Mettre à jour</string>
+    <string name="acao_cancelar">Annuler</string>
+    <string name="acao_excluir">Supprimer</string>
+    <string name="confirmacao_excluir_titulo">Confirmer la suppression</string>
+    <string name="confirmacao_excluir_mensagem">Êtes-vous sûr de vouloir supprimer ce collaborateur ? Cette action est irréversible.</string>
+    <string name="erro_email_espaco">Pas d\'espaces autorisés dans l\'e-mail</string>
+    <string name="erro_email_invalido">Saisissez un e-mail valide (ex : nom@domaine.com)</string>
+    <string name="erro_colaborador_ja_cadastrado">Collaborateur déjà enregistré</string>
+    <string name="nenhum_colaborador_cadastrado">Aucun collaborateur pour le moment</string>
+    <string name="nivel_administrativo">Administratif</string>
+    <string name="nivel_financeiro">Financier</string>
+    <string name="nivel_gerencia">Direction</string>
+    <string name="nivel_suporte">Support</string>
+</resources>
