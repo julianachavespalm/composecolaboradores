@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Compose Colaboradores</string>
+    <string name="label_cadastrar">Cadastrar colaborador</string>
+    <string name="label_editar">Editar cadastro</string>
+    <string name="label_nome">Nome</string>
+    <string name="label_email">E-mail</string>
+    <string name="label_nivel">Nível</string>
+    <string name="placeholder_nivel">Selecione um nível</string>
+    <string name="acao_salvar">Salvar</string>
+    <string name="acao_atualizar">Atualizar dados</string>
+    <string name="acao_cancelar">Cancelar</string>
+    <string name="acao_excluir">Excluir</string>
+    <string name="confirmacao_excluir_titulo">Confirmar exclusão</string>
+    <string name="confirmacao_excluir_mensagem">Tem certeza que deseja remover este colaborador? Esta ação não pode ser desfeita.</string>
+    <string name="erro_email_espaco">E-mail não deve conter espaços</string>
+    <string name="erro_email_invalido">Digite um e-mail válido (ex: nome@dominio.com)</string>
+    <string name="erro_colaborador_ja_cadastrado">Colaborador já cadastrado</string>
+    <string name="nenhum_colaborador_cadastrado">Nenhum colaborador cadastrado</string>
+</resources>
