@@ -8,11 +8,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class InMemoryColaboradorRepository : ColaboradorRepository {
-    private val _colaboradores = MutableStateFlow<List<Colaborador>>(emptyList())
+    companion object {
+        private val _colaboradores = MutableStateFlow<List<Colaborador>>(emptyList())
+        private var proximoId = 1
+    }
+
     override val colaboradores: StateFlow<List<Colaborador>> = _colaboradores.asStateFlow()
     
-    private var proximoId = 1
-
     override fun salvar(colaborador: Colaborador) {
         if (colaborador.nome.isBlank() || 
             !isEmailValido(colaborador.email) || 

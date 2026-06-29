@@ -1,16 +1,36 @@
 package io.github.julianachavespalm.composecolaboradores.ui.gerenciador.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -74,7 +94,15 @@ fun ColaboradorForm(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Box(modifier = Modifier.fillMaxWidth()) {
+        @OptIn(ExperimentalMaterial3Api::class)
+        ExposedDropdownMenuBox(
+            expanded = menuExpandido,
+            onExpandedChange = {
+                focusManager.clearFocus()
+                menuExpandido = !menuExpandido
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
             OutlinedTextField(
                 value = if (nivelSelecionado == Nivel.NENHUM) "" else stringResource(nivelSelecionado.descricao),
                 onValueChange = {},
@@ -82,17 +110,19 @@ fun ColaboradorForm(
                 label = { Text(stringResource(R.string.label_nivel)) },
                 placeholder = { Text(stringResource(R.string.placeholder_nivel)) },
                 leadingIcon = { Icon(Icons.AutoMirrored.Filled.List, null) },
-                trailingIcon = {
-                    IconButton(onClick = { menuExpandido = !menuExpandido }) {
-                        Icon(Icons.Default.ArrowDropDown, null)
-                    }
-                },
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = menuExpandido) },
                 modifier = Modifier
                     .fillMaxWidth()
+                    .menuAnchor(MenuAnchorType.PrimaryEditable, true)
                     .testTag(TestTags.CAMPO_NIVEL),
-                shape = MaterialTheme.shapes.medium
+                shape = MaterialTheme.shapes.medium,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent
+                )
             )
-            DropdownMenu(
+
+            ExposedDropdownMenu(
                 expanded = menuExpandido,
                 onDismissRequest = { menuExpandido = false },
                 modifier = Modifier.fillMaxWidth(0.85f)
@@ -103,8 +133,8 @@ fun ColaboradorForm(
                         onClick = {
                             onNivelChange(nivel)
                             menuExpandido = false
-                        },
-                        modifier = Modifier.testTag("menu_item_${nivel.name}")
+                            focusManager.clearFocus()
+                        }
                     )
                 }
             }
@@ -117,9 +147,9 @@ fun ColaboradorForm(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             OutlinedButton(
-                onClick = { 
-                    onCancelar()
+                onClick = {
                     focusManager.clearFocus()
+                    onCancelar()
                 },
                 modifier = Modifier.weight(1f).testTag(TestTags.BOTAO_CANCELAR),
                 shape = MaterialTheme.shapes.medium,

@@ -11,11 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.github.julianachavespalm.composecolaboradores.R
 import io.github.julianachavespalm.composecolaboradores.ui.TestTags
+import io.github.julianachavespalm.composecolaboradores.ui.components.*
 import io.github.julianachavespalm.composecolaboradores.ui.gerenciador.components.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,13 +28,8 @@ fun GerenciadorColaboradoresScreen(viewModel: ColaboradorViewModel) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            CenterAlignedTopAppBar(
-                title = { 
-                    Text(
-                        text = stringResource(R.string.app_name),
-                        fontWeight = FontWeight.ExtraBold
-                    ) 
-                }
+            ColaboradorTopAppBar(
+                isEditing = viewModel.colaboradorEmEdicao != null
             )
         }
     ) { padding ->
@@ -45,26 +39,14 @@ fun GerenciadorColaboradoresScreen(viewModel: ColaboradorViewModel) {
                 .fillMaxSize()
                 .padding(padding)
                 .testTag(TestTags.LISTA_COLABORADORES),
-            contentPadding = PaddingValues(bottom = 32.dp),
+            contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
                 Column(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = stringResource(
-                            if (viewModel.colaboradorEmEdicao == null) R.string.label_cadastrar 
-                            else R.string.label_editar
-                        ),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(vertical = 16.dp),
-                        textAlign = TextAlign.Center
-                    )
-                    
                     ColaboradorForm(
                         nome = viewModel.nome,
                         onNomeChange = { viewModel.onNomeChange(it) },
@@ -82,7 +64,7 @@ fun GerenciadorColaboradoresScreen(viewModel: ColaboradorViewModel) {
                     )
                     
                     HorizontalDivider(
-                        modifier = Modifier.padding(top = 24.dp, bottom = 8.dp),
+                        modifier = Modifier.padding(top = 16.dp),
                         color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
                     )
                 }
@@ -101,7 +83,6 @@ fun GerenciadorColaboradoresScreen(viewModel: ColaboradorViewModel) {
             } else {
                 items(listaColaboradores, key = { it.id }) { colaborador ->
                     ColaboradorCard(
-                        modifier = Modifier.padding(horizontal = 16.dp),
                         colaborador = colaborador,
                         onEdit = {
                             viewModel.editar(colaborador)

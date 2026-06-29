@@ -56,8 +56,6 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
             .performClick()
     }
 
-
-
     fun clicarExcluirColaborador(u: Usuario) = apply {
         val cardMatcher = matcherCardColaborador(u)
         scrollPara(cardMatcher)
