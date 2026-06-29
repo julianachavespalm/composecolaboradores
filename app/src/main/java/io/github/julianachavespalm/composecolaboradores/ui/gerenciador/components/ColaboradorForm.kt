@@ -130,6 +130,7 @@ fun ColaboradorForm(
                 Nivel.entries.filter { it != Nivel.NENHUM }.forEach { nivel ->
                     DropdownMenuItem(
                         text = { Text(stringResource(nivel.descricao)) },
+                        modifier = Modifier.testTag("menu_item_${nivel.name}"),
                         onClick = {
                             onNivelChange(nivel)
                             menuExpandido = false

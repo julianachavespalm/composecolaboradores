@@ -5,6 +5,7 @@ import io.github.julianachavespalm.composecolaboradores.domain.model.Nivel
 import io.github.julianachavespalm.composecolaboradores.logic.ColaboradorRepositoryLogic
 import io.github.julianachavespalm.composecolaboradores.logic.ColaboradorRepositoryLogic.Companion.Massa
 import io.github.julianachavespalm.composecolaboradores.logic.ColaboradorRepositoryLogic.Companion.umColaborador
+import org.junit.Before
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -14,6 +15,11 @@ class ColaboradorRepositoryTest {
 
     private val repository = InMemoryColaboradorRepository()
     private val logic = ColaboradorRepositoryLogic(repository)
+
+    @Before
+    fun setup() {
+        repository.reset()
+    }
 
     @Test
     fun `Deve iniciar com lista vazia`() {

@@ -14,6 +14,11 @@ class InMemoryColaboradorRepository : ColaboradorRepository {
     }
 
     override val colaboradores: StateFlow<List<Colaborador>> = _colaboradores.asStateFlow()
+
+    fun reset() {
+        _colaboradores.value = emptyList()
+        proximoId = 1
+    }
     
     override fun salvar(colaborador: Colaborador) {
         if (colaborador.nome.isBlank() || 

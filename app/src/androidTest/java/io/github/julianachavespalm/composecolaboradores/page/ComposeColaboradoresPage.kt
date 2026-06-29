@@ -32,9 +32,11 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
     fun preencherFormulario(u: Usuario) = apply {
         node(fieldNome).performTextReplacement(u.nome)
         node(fieldEmail).performTextReplacement(u.email)
-        node(fieldEmail).performImeAction()
+        
+        node(hasTestTag(TestTags.CAMPO_NIVEL)).performClick()
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("menu_item_${u.nivel.name}").performClick()
+        
+        node(hasTestTag("menu_item_${u.nivel.name}")).performClick()
         composeTestRule.waitForIdle()
     }
 
@@ -44,7 +46,7 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
     }
 
     fun clicarAbrirCadastro() = apply {
-        scrollPara(hasText(res(R.string.label_cadastrar)) or hasText(res(R.string.label_editar)))
+        scrollPara(hasTestTag(TestTags.CAMPO_NOME))
     }
 
     fun cadastrar(u: Usuario) = clicarAbrirCadastro().preencherFormulario(u).clicarSalvar()
@@ -52,14 +54,14 @@ class ComposeColaboradoresPage(private val composeTestRule: ComposeContentTestRu
     fun clicarEditarColaborador(u: Usuario) = apply {
         val cardMatcher = matcherCardColaborador(u)
         scrollPara(cardMatcher)
-        node(hasContentDescription(res(R.string.label_editar)) and hasAnyAncestor(cardMatcher))
+        node(hasText(res(R.string.label_editar)) and hasAnyAncestor(cardMatcher))
             .performClick()
     }
 
     fun clicarExcluirColaborador(u: Usuario) = apply {
         val cardMatcher = matcherCardColaborador(u)
         scrollPara(cardMatcher)
-        node(hasContentDescription(res(R.string.acao_excluir)) and hasAnyAncestor(cardMatcher))
+        node(hasText(res(R.string.acao_excluir)) and hasAnyAncestor(cardMatcher))
             .performClick()
     }
 
