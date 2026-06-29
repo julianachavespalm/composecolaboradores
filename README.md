@@ -16,15 +16,16 @@ Uma aplicação Android para o gerenciamento de colaboradores, desenvolvida com 
     - Cards elevados com separação visual por nível de acesso.
     - Botões de ação contextuais (Editar/Excluir).
     - Feedback visual para validações em tempo real.
-- **Suporte Multi-idioma (i18n):**
-    - Interface totalmente traduzida para **Português**, **Inglês** e **Francês**.
-    - Localização automática baseada nas configurações do sistema.
-      <img alt="Captura de tela do aplicativo exibindo conteúdo em português, francês e inglês" src="img.png" width="300"/>
 - **Validações Inteligentes:**
     - Regex para validação de e-mail.
     - Bloqueio de cadastros duplicados (Nome + E-mail + Nível).
     - Impedimento de espaços em branco em campos de e-mail.
     - Habilitação dinâmica do botão de salvar apenas com dados válidos.
+- **Suporte Multi-idioma (i18n):**
+    - Interface totalmente traduzida para **Português**, **Inglês** e **Francês**.
+    - Localização automática baseada nas configurações do sistema.
+  
+  <img alt="Captura de tela do aplicativo exibindo conteúdo em português, francês e inglês" src="img.png" width="300"/>
 
 ## Arquitetura e Padrões
 
