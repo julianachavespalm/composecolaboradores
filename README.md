@@ -2,11 +2,11 @@
 
 [![Android CI](https://github.com/julianachavespalm/composecolaboradores/actions/workflows/android.yml/badge.svg)](https://github.com/julianachavespalm/composecolaboradores/actions/workflows/android.yml)
 
-Uma aplicação Android moderna para o gerenciamento de colaboradores, desenvolvida com **Jetpack Compose** e **Material Design 3**. O projeto demonstra a aplicação de princípios sólidos de engenharia de software, incluindo **Clean Architecture**, **MVVM** e uma suíte de testes automatizados robusta.
+Uma aplicação Android para o gerenciamento de colaboradores, desenvolvida com **Jetpack Compose** e **Material Design 3**. O projeto demonstra a aplicação de princípios sólidos de engenharia de software, incluindo **Clean Architecture**, **MVVM** e uma suíte de testes automatizados.
 
 ---
 
-## 🚀 Funcionalidades
+## Funcionalidades
 
 - **Gerenciamento Completo (CRUD):**
     - Listagem dinâmica de colaboradores.
@@ -16,13 +16,17 @@ Uma aplicação Android moderna para o gerenciamento de colaboradores, desenvolv
     - Cards elevados com separação visual por nível de acesso.
     - Botões de ação contextuais (Editar/Excluir).
     - Feedback visual para validações em tempo real.
+- **Suporte Multi-idioma (i18n):**
+    - Interface totalmente traduzida para **Português**, **Inglês** e **Francês**.
+    - Localização automática baseada nas configurações do sistema.
+      <img alt="Captura de tela do aplicativo exibindo conteúdo em português, francês e inglês" src="img.png" width="300"/>
 - **Validações Inteligentes:**
     - Regex para validação de e-mail.
     - Bloqueio de cadastros duplicados (Nome + E-mail + Nível).
     - Impedimento de espaços em branco em campos de e-mail.
     - Habilitação dinâmica do botão de salvar apenas com dados válidos.
 
-## 🏗️ Arquitetura e Padrões
+## Arquitetura e Padrões
 
 O projeto segue os princípios da **Clean Architecture**, garantindo testabilidade e independência de frameworks:
 
@@ -32,7 +36,7 @@ O projeto segue os princípios da **Clean Architecture**, garantindo testabilida
     - **ViewModels:** Gerenciam o estado da UI usando `StateFlow`.
     - **Composables:** UI declarativa e modularizada, utilizando *State Hoisting* para componentes reutilizáveis.
 
-## 🛠️ Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 - **Linguagem:** [Kotlin](https://kotlinlang.org/)
 - **UI:** [Jetpack Compose](https://developer.android.com/jetpack/compose) (Material 3)
@@ -43,7 +47,7 @@ O projeto segue os princípios da **Clean Architecture**, garantindo testabilida
     - **Instrumentados:** Compose Test Rule + Page Object Pattern (Uiautomator integrado).
 - **CI/CD:** GitHub Actions para automação de build e testes.
 
-## 📂 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```text
 app/src/main/java/.../composecolaboradores/
@@ -59,7 +63,7 @@ app/src/main/java/.../composecolaboradores/
         └── GerenciadorColaboradoresScreen.kt
 ```
 
-## 🧪 Testes Automatizados
+## Testes Automatizados
 
 A qualidade do projeto é garantida por dois níveis de testes:
 
